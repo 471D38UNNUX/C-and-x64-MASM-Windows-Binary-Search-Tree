@@ -1,0 +1,62 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Assembly Project\\Binary Search Tree\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5870B5BE-FD4A-42A4-85F0-03A49A27139D}|Binary Search Tree.vcxproj|D:\\Assembly Project\\Binary Search Tree\\BST.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5870B5BE-FD4A-42A4-85F0-03A49A27139D}|Binary Search Tree.vcxproj|solutionrelative:BST.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5870B5BE-FD4A-42A4-85F0-03A49A27139D}|Binary Search Tree.vcxproj|D:\\Assembly Project\\Binary Search Tree\\BST.asm||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{5870B5BE-FD4A-42A4-85F0-03A49A27139D}|Binary Search Tree.vcxproj|solutionrelative:BST.asm||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BST.asm",
+              "DocumentMoniker": "D:\\Assembly Project\\Binary Search Tree\\BST.asm",
+              "RelativeDocumentMoniker": "BST.asm",
+              "ToolTip": "D:\\Assembly Project\\Binary Search Tree\\BST.asm",
+              "RelativeToolTip": "BST.asm",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-02-16T11:47:43.227Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BST.c",
+              "DocumentMoniker": "D:\\Assembly Project\\Binary Search Tree\\BST.c",
+              "RelativeDocumentMoniker": "BST.c",
+              "ToolTip": "D:\\Assembly Project\\Binary Search Tree\\BST.c",
+              "RelativeToolTip": "BST.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQBAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-02-16T11:34:25.334Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
