@@ -204,7 +204,7 @@ l1:
 	xor		edi, edi
 l2:
 	lea		rcx, txt6
-	lea		rdx, qword ptr [rbp + rdi * 8]
+	mov		rdx, qword ptr [rbp + rdi * 8]
 	call	printf_s
 
 	inc		dil
@@ -237,7 +237,7 @@ l2:
 	xor		edi, edi
 l3:
 	lea		rcx, txt6
-	lea		rdx, qword ptr [rbp + rdi * 8]
+	mov		rdx, qword ptr [rbp + rdi * 8]
 	call	printf_s
 
 	inc		dil
@@ -256,51 +256,51 @@ l3:
 	call	ExitProcess
 mainCRTStartup	endp
 insertBST		proc
+	mov		8 [rsp], rcx
+	mov		16 [rsp], rdx
+
 	push	rbx
+
+	sub		rsp, 32
 
 	mov		rbx, rcx
 
 	test	rcx, rcx
-	jnz		cont
+	jnz		c0
 
-	push	rbp
-
-	sub		rsp, 24
-
-	mov		rbp, rdx
-	mov		ecx, 24
+	mov		cl, 24
 	call	malloc
-	mov		rbx, rax
 
 	test	rax, rax
 	jz		Error
 
-	mov		[rbx], rbp
+	mov		rbx, rax
+	mov		rax, 56 [rsp]
+	mov		[rbx], rax
 	mov		qword ptr 8 [rbx], 0
 	mov		qword ptr 16 [rbx], 0
 
-	add		rsp, 24
-
-	pop		rbp
-
 	jmp		done
-cont:
+c0:
 	cmp		rdx, [rbx]
-	jb		less
-	ja		great
-	je		done
-less:
-	mov		rcx, qword ptr 8 [rbx]
-	call	insertBST
-	mov		qword ptr 8 [rbx], rax
+	jb		l0
+	ja		g0
 
 	jmp		done
-great:
-	mov		rcx, qword ptr 16 [rbx]
+l0:
+	mov		rcx, 8 [rcx]
 	call	insertBST
-	mov		qword ptr 16 [rbx], rax
+	mov		8 [rbx], rax
+
+	jmp		done
+g0:
+	mov		rcx, 16 [rcx]
+	call	insertBST
+	mov		16 [rbx], rax
 done:
 	mov		rax, rbx
+
+	add		rsp, 32
 
 	pop		rbx
 
@@ -310,240 +310,257 @@ Error:
 	call	ExitProcess
 insertBST		endp
 countBST		proc
-	test	rcx, rcx
-	jnz		cont
+	mov		8 [rsp], rcx
 
-	xor		eax, eax
-
-	ret
-cont:
 	push	rbx
 	push	rbp
+	
+	sub		rsp, 24
 
 	mov		rbx, rcx
-	mov		rcx, qword ptr 8 [rbx]
-	call	countBST
-	mov		ebp, eax
+	
+	test	rcx, rcx
+	jnz		f0
 
-	mov		rcx, qword ptr 16 [rbx]
+	xor		eax, eax
+	jmp		done
+f0:
+	mov		rcx, 8 [rcx]
 	call	countBST
+	mov		rbp, rax
 
-	inc		eax
-	add		eax, ebp
+	mov		rcx, 16 [rbx]
+	call	countBST
+	
+	lea		rax, [rax + rbp + 1]
+done:
+	add		rsp, 24
 
 	pop		rbp
 	pop		rbx
-
+	
 	ret
 countBST		endp
 inorderBST		proc
-	test	rcx, rcx
-	jz		done
+	mov		8 [rsp], rcx
+	mov		16 [rsp], rdx
+	mov		24 [rsp], r8
 
 	push	rbx
 
+	sub		rsp, 32
+
 	mov		rbx, rcx
-	mov		rcx, qword ptr 8 [rbx]
+
+	test	rcx, rcx
+	jz		done
+
+	mov		rcx, 8 [rcx]
 	call	inorderBST
 
-	mov		rbp, [rbx]
-	mov		rdi, [r8]
-	mov		qword ptr [rdx + rdi * 8], rbp
-	inc		rdi
-	mov		[r8], rdi
+	mov		rax, [rbx]
+	mov		rcx, [r8]
+	mov		[rdx + rcx * 8], rax
+	inc		rcx
+	mov		[r8], rcx
 
-	mov		rcx, qword ptr 16 [rbx]
+	mov		rcx, 16 [rbx]
 	call	inorderBST
+done:
+	add		rsp, 32
 
 	pop		rbx
-done:
+	
 	ret
 inorderBST		endp
 findMinBST		proc
 l0:
 	test	rcx, rcx
 	jz		done
+
 	cmp		qword ptr 8 [rcx], 0
 	jz		done
 
-	mov		rcx, qword ptr 8 [rcx]
+	mov		rcx, 8 [rcx]
+
+	jmp		l0
 done:
 	mov		rax, rcx
 
 	ret
 findMinBST		endp
 eraseBST		proc
+	mov		8 [rsp], rcx
+	mov		16 [rsp], rdx
+
+	push	rbx
+	push	rbp
+
+	sub		rsp, 24
+	
+	mov		rbx, rcx
+	mov		rbp, rdx
+	
 	test	rcx, rcx
 	jnz		c1
 
 	xor		eax, eax
 
-	ret
+	jmp		done
 c1:
-	push	rbx
-	
-	mov		rbx, rcx
-
 	cmp		rdx, [rbx]
-	ja		great
-	je		equal
+	ja		g0
+	je		e0
 
-	push	rbp
-
-	mov		rbp, rdx
-	mov		rcx, qword ptr 8 [rbx]
-	mov		rdx, rbp
+	mov		rcx, 8 [rcx]
 	call	eraseBST
-	mov		qword ptr 8 [rbx], rax
+	mov		8 [rbx], rax
 
 	mov		rax, rbx
-
-	pop		rbp
 	
 	jmp		done
-great:
-	push	rbp
-
-	mov		rbp, rdx
-	mov		rcx, qword ptr 16 [rbx]
-	mov		rdx, rbp
+g0:
+	mov		rcx, 16 [rcx]
 	call	eraseBST
-	mov		qword ptr 16 [rbx], rax
+	mov		16 [rbx], rax
 
 	mov		rax, rbx
 
-	pop		rbp
-
 	jmp		done
-equal:
-	cmp		qword ptr 8 [rbx], 0
+e0:
+	cmp		qword ptr 8 [rcx], 0
 	jnz		c2
 
-	sub		rsp, 32
-
-	mov		rdi, qword ptr 16 [rbx]
+	mov		rbp, 16 [rcx]
 	
-	mov		rcx, rbx
 	call	free
 
-	mov		rax, rdi
-
-	add		rsp, 32
+	mov		rax, rbp
 
 	jmp		done
 c2:
-	cmp		qword ptr 16 [rbx], 0
+	cmp		qword ptr 16 [rcx], 0
 	jnz		c3
-	
-	sub		rsp, 32
 
-	mov		rdi, qword ptr 8 [rbx]
+	mov		rbp, 8 [rcx]
 	
-	mov		rcx, rbx
 	call	free
 
-	mov		rax, rdi
-
-	add		rsp, 32
+	mov		rax, rbp
 
 	jmp		done
 c3:
-	mov		rcx, qword ptr 16 [rbx]
+	mov		rcx, 16 [rcx]
 	call	findMinBST
-	mov		rax, [rax]
 
+	mov		rax, [rax]
 	mov		[rbx], rax
 
-	mov		rcx, qword ptr 16 [rbx]
+	mov		rcx, 16 [rbx]
 	mov		rdx, rax
 	call	eraseBST
-	mov		qword ptr 16 [rbx], rax
+	mov		16 [rbx], rax
 
 	mov		rax, rbx
 done:
+	add		rsp, 24
+
+	pop		rbp
 	pop		rbx
 	
 	ret
 eraseBST		endp
 freeBST			proc
-	test	rcx, rcx
-	jz		done
-	
-	push	rbx
+	mov		8 [rsp], rcx
 
+	push	rbx
+	
 	sub		rsp, 32
 
 	mov		rbx, rcx
+	
+	test	rcx, rcx
+	jz		done
 
-	mov		rcx, qword ptr 8 [rbx]
+	mov		rcx, 8 [rcx]
 	call	freeBST
 
-	mov		rcx, qword ptr 16 [rbx]
+	mov		rcx, 16 [rbx]
 	call	freeBST
 
 	mov		rcx, rbx
 	call	free
-
+done:
 	add		rsp, 32
 
 	pop		rbx
-done:
+
 	ret
 freeBST			endp
 insertBSTString	proc
+	mov		8 [rsp], rcx
+	mov		16 [rsp], rdx
+	
 	push	rbx
+	push	rdi
+	push	rsi
+
+	sub		rsp, 16
 
 	mov		rbx, rcx
 
 	test	rcx, rcx
-	jnz		cont
-
-	push	rbp
-
-	sub		rsp, 24
+	jnz		c0
 	
-	mov		rbp, rdx
-	mov		ecx, 24
+	mov		cl, 24
 	call	malloc
-	mov		rbx, rax
 
 	test	rax, rax
 	jz		Error
 
-	mov		rcx, rbp
+	mov		rbx, rax
+	mov		rcx, 56 [rsp]
 	call	_strdup
-	mov		rax, [rax]
-	mov		[rbx], rax
 
+	mov		[rbx], rax
 	mov		qword ptr 8 [rbx], 0
 	mov		qword ptr 16 [rbx], 0
 
-	add		rsp, 24
-
-	pop		rbp
-
 	jmp		done
-cont:
-	lea		rdi, [rbx]
+c0:
+	mov		rdi, [rcx]
+	xor		eax, eax
+	mov		ecx, 256
+	mov		r8d, ecx
+	repne	scasb
+
+	sub		r8w, cx
+	dec		r8w
+	mov		cx, r8w
+	mov		rdi, [rbx]
 	mov		rsi, rdx
-	mov		rcx, r8
 	repe	cmpsb
-	jb		less
-	ja		great
-	je		done
-less:
-	mov		rcx, qword ptr 8 [rbx]
-	call	insertBSTString
-	mov		qword ptr 8 [rbx], rax
+	jb		l0
+	ja		g0
 
 	jmp		done
-great:
-	mov		rcx, qword ptr 16 [rbx]
+l0:
+	mov		rcx, 8 [rbx]
 	call	insertBSTString
-	mov		qword ptr 16 [rbx], rax
+	mov		8 [rbx], rax
+
+	jmp		done
+g0:
+	mov		rcx, 16 [rbx]
+	call	insertBSTString
+	mov		16 [rbx], rax
 done:
 	mov		rax, rbx
 
+	add		rsp, 16
+
+	pop		rsi
+	pop		rdi
 	pop		rbx
 
 	ret
@@ -552,87 +569,80 @@ Error:
 	call	ExitProcess
 insertBSTString	endp
 eraseBSTString	proc
+	mov		8 [rsp], rcx
+	mov		16 [rsp], rdx
+
+	push	rbx
+	push	rbp
+	push	rdi
+	push	rsi
+
+	sub		rsp, 8
+
+	mov		rbx, rcx
+	
 	test	rcx, rcx
 	jnz		c1
 
 	xor		eax, eax
 
-	ret
+	jmp		done
 c1:
-	push	rbx
+	mov		rdi, rdx
+	xor		eax, eax
+	mov		ecx, 256
+	mov		r8d, ecx
+	repne	scasb
 	
-	mov		rbx, rcx
-
-	lea		rdi, [rbx]
+	sub		r8w, cx
+	mov		cx, r8w
+	mov		rdi, [rbx]
 	mov		rsi, rdx
-	mov		rcx, r8
 	repe	cmpsb
-	ja		great
-	je		equal
+	ja		g0
+	je		e0
 
-	push	rbp
-
-	mov		rbp, rdx
-	mov		rcx, qword ptr 8 [rbx]
-	mov		rdx, rbp
+	mov		rcx, 8 [rbx]
 	call	eraseBSTString
-	mov		qword ptr 8 [rbx], rax
+	mov		8 [rbx], rax
 
 	mov		rax, rbx
-
-	pop		rbp
 	
 	jmp		done
-great:
-	push	rbp
-
-	mov		rbp, rdx
-	mov		rcx, qword ptr 16 [rbx]
-	mov		rdx, rbp
+g0:
+	mov		rcx, 16 [rbx]
 	call	eraseBSTString
-	mov		qword ptr 16 [rbx], rax
+	mov		16 [rbx], rax
 
 	mov		rax, rbx
 
-	pop		rbp
-
 	jmp		done
-equal:
+e0:
 	cmp		qword ptr 8 [rbx], 0
 	jnz		c2
 
-	sub		rsp, 32
-
-	mov		rdi, qword ptr 16 [rbx]
+	mov		rbp, 16 [rbx]
 	
 	mov		rcx, rbx
 	call	free
 
-	mov		rax, rdi
-
-	add		rsp, 32
+	mov		rax, rbp
 
 	jmp		done
 c2:
 	cmp		qword ptr 16 [rbx], 0
 	jnz		c3
-	
-	sub		rsp, 32
 
-	mov		rdi, qword ptr 8 [rbx]
+	mov		rbp, 8 [rbx]
 	
 	mov		rcx, rbx
 	call	free
 
-	mov		rax, rdi
-
-	add		rsp, 32
+	mov		rax, rbp
 
 	jmp		done
 c3:
-	sub		rsp, 32
-	
-	mov		rcx, qword ptr 16 [rbx]
+	mov		rcx, 16 [rbx]
 	call	findMinBST
 	mov		rbp, [rax]
 
@@ -641,19 +651,29 @@ c3:
 
 	mov		rcx, [rbp]
 	call	_strdup
+
+	test	rax, rax
+	jz		Error
+
 	mov		[rbx], rax
 
-	mov		rcx, qword ptr 16 [rbx]
+	mov		rcx, 16 [rbx]
 	mov		rdx, [rbp]
 	call	eraseBST
-	mov		qword ptr 16 [rbx], rax
+	mov		16 [rbx], rax
 
 	mov		rax, rbx
-
-	add		rsp, 32
 done:
+	add		rsp, 8
+	
+	pop		rsi
+	pop		rdi
+	pop		rbp
 	pop		rbx
 	
 	ret
+Error:
+	mov		ecx, 1
+	call	ExitProcess
 eraseBSTString	endp
 end
